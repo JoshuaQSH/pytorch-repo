@@ -24,6 +24,8 @@ with torch.no_grad():
         torch.cuda.synchronize()
         curr_time = starter.elapsed_time(ender)/1000
         total_time += curr_time
-
+# optimal_batch_size here, should be tested by the max batch-size
+optimal_batch_size = 64
 throughput = (repetitions*optimal_batch_size) / total_time
+print("Model: ", model_name[2])
 print("Final Throughput: ", throughput)

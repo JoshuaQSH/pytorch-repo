@@ -13,13 +13,13 @@ parser.add_argument('--clip', type=float, default=0.25,
                     help='gradient clipping')
 parser.add_argument('--epochs', type=int, default=40,
                     help='upper epoch limit')
-parser.add_argument('--bptt', type=int, default=258,
+parser.add_argument('--bptt', type=int, default=128,
                     help='sequence length')
-parser.add_argument('--dropout', type=float, default=0.5,
+parser.add_argument('--dropout', type=float, default=0.1,
                     help='dropout applied to layers (0 = no dropout)')
-parser.add_argument('--emsize', type=int, default=258,
+parser.add_argument('--ninp', type=int, default=512,
                     help='size of word embeddings')
-parser.add_argument('--nhead', type=int, default=2,
+parser.add_argument('--nhead', type=int, default=16,
                     help='the number of heads in the encoder/decoder of the transformer model')
 
 args = parser.parse_args()
@@ -30,21 +30,25 @@ def get_parameter_number(model):
     trainable_num = sum(p.numel() for p in model.parameters() if p.requires_grad)
     return {'Total (Mb)': total_num/(1024*1024), 'Trainable (Mb)': trainable_num/(1024*1024)}
 
-ntokens = 1000
+ntokens = 30522
+
+# Only TransformerEncoder involved
+# EncoderLayer: 24; FFN hidden Dim: 1024*4; MultiheadAttn: 16
+# MultiheadAttn + LayerNorm + FFN + LayerNorm
 model_bench = model.TransformerModel(ntokens, 
-        args.emsize, 
+        args.ninp, 
         args.nhead, 
         args.nhid, 
         args.nlayers, 
         args.dropout).to(device)
 
-model_trans = nn.Transformer(d_model=512,
+model_trans = nn.Transformer(d_model=4096,
         nhead=16,
         num_encoder_layers=24,
         num_decoder_layers=0,
         dim_feedforward=1024,
         dropout=0.5,
-        activation="relu").to(device)
+        activation="gelu").to(device)
 #model_bench = models.alexnet()
-model_info = get_parameter_number(model_trans)
+model_info = get_parameter_number(model_bench)
 print(model_info)

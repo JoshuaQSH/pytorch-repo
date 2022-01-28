@@ -106,18 +106,31 @@ class PositionalEncoding(nn.Module):
         return self.dropout(x)
 
 class TransformerModel(nn.Module):
-    """Container module with an encoder, a recurrent or transformer module, and a decoder."""
-
+    """Container module with an encoder, a recurrent or transformer module, and a decoder.
+    Args:
+        ntoken: same as d_model in Transformer model, the number of expected features in the encoder/decoder inputs
+        ninp: d_model works in encoder inputs - the number of expected features in the encoder inputs
+        nhead: the number of heads in the muti-head attention models
+        nhid: dim_feedward in the encoder inputs - the dimension of the feedforward network model (should be default as 1024, same as BERT)
+        nlayers: num_encoder_layer, the number of subencoder layers in the encoder
+    """
+   
     def __init__(self, ntoken, ninp, nhead, nhid, nlayers, dropout=0.5):
         super(TransformerModel, self).__init__()
         try:
-            from torch.nn import TransformerEncoder, TransformerEncoderLayer
+            #from torch.nn import TransformerEncoder, TransformerEncoderLayer
+            from TransformerEncoderLayer import TransformerEncoderLayer
+            from torch.nn import TransformerEncoder
         except:
             raise ImportError('TransformerEncoder module does not exist in PyTorch 1.1 or lower.')
         self.model_type = 'Transformer'
         self.src_mask = None
         self.pos_encoder = PositionalEncoding(ninp, dropout)
-        encoder_layers = TransformerEncoderLayer(ninp, nhead, nhid, dropout)
+        encoder_layers = TransformerEncoderLayer(d_model=ninp, 
+                nhead=nhead, 
+                dim_feedforward=nhid, 
+                dropout=dropout,
+                activation="gelu")
         self.transformer_encoder = TransformerEncoder(encoder_layers, nlayers)
         self.encoder = nn.Embedding(ntoken, ninp)
         self.ninp = ninp
