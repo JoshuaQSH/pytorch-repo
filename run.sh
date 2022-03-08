@@ -10,9 +10,9 @@ do
 done
 echo "Env Check Success"
 # specify --use-cuda to use GPU device
-python ./train.py --model resnet18 \
+python ./train.py --model convnext_small \
        --dataset ImageNet \
-       --batch-size 128 \
+       --batch-size 32 \
        --use-cuda \
        --lr 0.01 \
        --device cuda:0 \

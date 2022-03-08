@@ -22,6 +22,10 @@ import torchvision.models as models
 import torchvision.transforms as transforms
 from utils import progress_bar, data_loader, train_val_dataset
 
+from timm.models import create_model
+import os
+os.environ['TORCH_HOME']='/home/shenghao/pretrained_model'
+
 # 虞美人
 # 文章代码何时了，无奈天知晓
 # 近邻夜半又欢歌，身倦思枯平躺望楼奢
@@ -36,7 +40,7 @@ parser.add_argument('--dataset', '-d', metavar='DATA', default='CIFAR10',
                     help='datasets chosen: ' + ' | '.join(datasets_name) +
                     ' (default: CIFAR10)')
 
-parser.add_argument('--model', type=str, default='resnet18', choices=['resnet18', 'resnet34', 'resnet50'], help='models choosing')
+parser.add_argument('--model', type=str, default='resnet18', choices=['resnet18', 'resnet34', 'resnet50', 'convnext_small'], help='models choosing')
 parser.add_argument('-b', '--batch-size', default=128, type=int, metavar='N', help='mini-batch size (default: 256)')
 parser.add_argument('--lr', default=0.01, type=float, help='learning rate')
 parser.add_argument('--use-cuda', default=True, action='store_true', help='use GPU CUDA for training improvement (default: True)')
@@ -121,7 +125,8 @@ elif args.dataset == 'CIFAR10':
 # Model
 print('==> Building model..')
 # net = models.resnet18(pretrained=args.pretrain)
-net = getattr(models, args.model)(pretrained=args.pretrain)
+net = create_model('convnext_small', pretrained=True, num_classes=1000, drop_path_rate=0, head_init_scale=1.0)
+#net = getattr(models, args.model)(pretrained=args.pretrain)
 print(args.model)
 net = net.to(device)
 best_acc = 0
