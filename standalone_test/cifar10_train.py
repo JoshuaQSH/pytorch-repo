@@ -41,11 +41,11 @@ transform_test = transforms.Compose([
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
 ])
 
-
-trainset = torchvision.datasets.CIFAR10(root='../dataset', train=True, download=True, transform=transform_train)
+# Should be an abs path here
+trainset = torchvision.datasets.CIFAR10(root='../../dataset', train=True, download=True, transform=transform_train)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=256, shuffle=True, num_workers=0)
 
-testset = torchvision.datasets.CIFAR10(root='../dataset', train=False, download=True, transform=transform_test)
+testset = torchvision.datasets.CIFAR10(root='../../dataset', train=False, download=True, transform=transform_test)
 testloader = torch.utils.data.DataLoader(testset, batch_size=32, shuffle=False, num_workers=0)
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
@@ -66,7 +66,7 @@ if args.resume:
     # Load checkpoint.
     print('==> Resuming from checkpoint..')
     assert os.path.isdir('checkpoint'), 'Error: no checkpoint directory found!'
-    checkpoint = torch.load('./checkpoint/ckpt.pth')
+    checkpoint = torch.load('../checkpoint/ckpt.pth')
     net.load_state_dict(checkpoint['net'])
     best_acc = checkpoint['acc']
     start_epoch = checkpoint['epoch']
@@ -128,11 +128,11 @@ def test(epoch):
             'acc': acc,
             'epoch': epoch,
         }
-        if not os.path.isdir('checkpoint'):
-            os.mkdir('checkpoint')
-        torch.save(state, './checkpoint/ckpt.pth')
-        torch.save(net, './checkpoint/{}_ckpt.pth'.format("vgg16"))
-        torch.save(net.state_dict(), './checkpoint/{}_stat.pth'.format("vgg16"))
+        if not os.path.isdir('../checkpoint'):
+            os.mkdir('../checkpoint')
+        torch.save(state, '../checkpoint/ckpt.pth')
+        torch.save(net, '../checkpoint/{}_ckpt.pth'.format("vgg16"))
+        torch.save(net.state_dict(), '../checkpoint/{}_stat.pth'.format("vgg16"))
 
         # Save jit script for c/c++
         # Using torch.jit.trace()
