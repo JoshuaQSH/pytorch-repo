@@ -211,6 +211,10 @@ def test(epoch):
         torch.save(net, './checkpoint/{}_ckpt.pth'.format(args.model))
         torch.save(net.state_dict(), './checkpoint/{}_stat.pth'.format(args.model))
 
+        # Save ONNX file 
+        #export_file = "{}_onnx".format(args.model)
+        #torch.onnx.export(net, inputs, export_file)
+
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
     test(epoch)
