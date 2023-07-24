@@ -40,4 +40,4 @@ optimal_batch_size = 64
 throughput = (repetitions*optimal_batch_size) / total_time
 print("Model: ", model_name_conv[0])
 print("Final Throughput: ", throughput)
-print(model)
+# print(model)

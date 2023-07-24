@@ -1,5 +1,5 @@
 python word_language.py --data /home/shenghao/dataset/wikitext-2 \
-        --model Transformer \
+    --model Transformer \
 	--emsize 512\
   	--nhid 1024 \
 	--nlayers 24 \
@@ -8,5 +8,5 @@ python word_language.py --data /home/shenghao/dataset/wikitext-2 \
 	--epochs 40 \
 	--batch_size 4 \
 	--bptt 128 \
-       	--nhead 16 \
+    --nhead 16 \
 	--cuda
